@@ -1,0 +1,33 @@
+[sidecar]
+# Bind on all interfaces so the Linux orchestrator (10.0.0.2) can reach us.
+host = "0.0.0.0"
+port = 8765
+
+# 6 Hz measured 5.95 Hz effective with p95 frame age 297 ms. The plan's floor is
+# 2-4 Hz; 4 Hz gives p95 359 ms. Higher than ~7 Hz is pointless: one adb
+# screencap of the raw framebuffer already costs ~132 ms.
+target_hz = 6
+
+# "jpeg" = raw framebuffer over adb, encoded here (~132 ms + ~10 ms).
+# "png"  = let the emulator compress (~315 ms, caps the loop at 3 Hz).
+frame_format = "jpeg"
+jpeg_quality = 80
+
+# Leave empty to auto-detect the MuMu adb binary and a connected device.
+adb_path = ""
+serial = ""
+
+[joystick]
+# Screen-space centre of the virtual joystick and its full-deflection radius, in
+# framebuffer pixels (1280x720 client). 0 deg = up/forward, angles increase
+# counter-clockwise on screen.
+center = [215, 545]
+radius = 105
+
+# Horizontal camera drag distance per requested degree of yaw, in pixels.
+camera_px_per_deg = 4.0
+
+# Held-touch transport: auto | motion_event | sendevent | swipe_repeat.
+# "auto" prefers `input motionevent`, then a discovered sendevent touchscreen
+# node, then repeated tiny swipes (least accurate; see plan section 11).
+hold_backend = "auto"
